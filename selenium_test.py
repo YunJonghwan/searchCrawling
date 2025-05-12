@@ -7,10 +7,14 @@ import time
 driver = webdriver.Chrome()  # 크롬 드라이버 실행
 
 # 2. 구글 홈페이지로 이동한다
-driver.get("https://www.google.com")
+driver.get("https://news.naver.com/")
+
+# 돋보기 버튼 클릭
+search = driver.find_element(By.CLASS_NAME, "Nicon_search");
+search.click()
 
 # 3. 검색창을 찾는다 (name 속성이 'q'인 입력창)
-search_box = driver.find_element(By.NAME, "q")
+search_box = driver.find_element(By.NAME, "query")
 
 # 4. 검색창에 '고양이'를 입력한다
 search_box.send_keys("고양이")

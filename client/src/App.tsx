@@ -8,13 +8,9 @@ import About from './pages/About'
 function App() {
   return (
     <BrowserRouter>
-      <nav>
-        <Link to="/">홈</Link> | <Link to="/about">소개</Link>
-      </nav>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        {/* 추가 라우트는 여기에 작성 */}
       </Routes>
     </BrowserRouter>
   )

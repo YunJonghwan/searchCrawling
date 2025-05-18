@@ -1,10 +1,11 @@
-function Home() {
-  return (
-    <div>
-      <h1>홈 페이지</h1>
-      <p>여기는 홈(Home) 페이지입니다.</p>
-    </div>
-  )
-}
+import { Layout } from '../components/Layout';
 
-export default Home
+export default function Home() {
+  return (
+    <Layout>
+      <div className="text-center mt-20 text-gray-600">
+        <p className="text-2xl font-medium">궁금한 뉴스를 검색해보세요</p>
+      </div>
+    </Layout>
+  );
+}

@@ -4,7 +4,8 @@ const Input = ({
   type = 'text',
   placeholder = '',
   className = '',
-  name = ''
+  name = '',
+  onChange
 }: InputType) => {
   return (
     <input
@@ -12,6 +13,7 @@ const Input = ({
       placeholder={placeholder}
       className={className}
       name={name}
+      onChange={onChange}
     />
   );
 };

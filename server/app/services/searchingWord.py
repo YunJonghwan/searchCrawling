@@ -13,6 +13,9 @@ def searchingWord(word):
   search_box = driver.find_element(By.NAME, "query")
   search_box.send_keys(word)
   search_box.send_keys(Keys.RETURN)
+  
+  titles = driver.find_elements(By.CSS_SELECTOR, "span.sds-comps-text")
+  print("기사 타이틀", titles)
 
   time.sleep(5)
   driver.quit()

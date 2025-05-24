@@ -8,7 +8,10 @@ export const Header = () => {
   const handleSearch = async () => {
     console.log(searchWord);
     try {
-      fetch(`http://localhost:5000/search/word=${searchWord}`);
+      await fetch(`http://localhost:5000/search?word=${searchWord}`, {
+        credentials: 'same-origin',
+      });
+
     } catch (error) {
       console.error("전송 에러 : ", error);
     }

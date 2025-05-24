@@ -6,7 +6,12 @@ export const Header = () => {
   const [searchWord, setSearchWord] = useState("");
 
   const handleSearch = async () => {
-    console.log(searchWord)
+    console.log(searchWord);
+    try {
+      fetch(`http://localhost:5000/search/word=${searchWord}`);
+    } catch (error) {
+      console.error("전송 에러 : ", error);
+    }
   };
 
   return (

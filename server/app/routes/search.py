@@ -10,6 +10,4 @@ def search_items():
     word = request.args.get('word')
     articles = searchingWord(word)
     print(articles)
-    # for article in articles:
-    #     print(article.title, article.link, article.image_url)
     return jsonify({"results": articles})

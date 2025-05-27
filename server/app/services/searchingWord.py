@@ -33,11 +33,11 @@ def searchingWord(word):
   title_list = [title.text for title in titles]
   subTitle_list = [sub.text for sub in subTitles]
 
-  print("기사 타이틀", title_list)
-  print("서브 타이틀", subTitle_list)
-  print("이미지 링크(href)", img_links)
+  # DTO 객체로 묶어서 반환
+  news_list = []
+  for title, subtitle, img_link in zip(title_list, subTitle_list, img_links):
+      news_list.append(NewsDTO(title=title, subtitle=subtitle, image=img_link))
 
-  time.sleep(5)
   driver.quit()
 
-  return "배열 객체"
+  return news_list

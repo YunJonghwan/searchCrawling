@@ -8,5 +8,8 @@ search_bp = Blueprint('search', __name__)
 @search_bp.route('/search')
 def search_items():
     word = request.args.get('word')
-    searchingWord(word)
-    return jsonify({"results": word})
+    articles = searchingWord(word)
+    print(articles)
+    # for article in articles:
+    #     print(article.title, article.link, article.image_url)
+    return jsonify({"results": articles})

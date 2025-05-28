@@ -1,14 +1,18 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
-// pages 폴더의 예시 컴포넌트 import (실제 파일명에 맞게 수정)
 import Home from './pages/Home'
 import Result from './pages/results'
+import type { Article } from './types/article';
+import { Header } from './components/Header';
 
 function App() {
+  const [articles, setArticles] = useState<Article[]>([]);
+
   return (
     <BrowserRouter>
+      <Header setArticles={setArticles} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home articles={articles} />} />
         <Route path="/Result" element={<Result />} />
       </Routes>
     </BrowserRouter>

@@ -1,18 +1,33 @@
 import Input from "../components/Input";
 import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import type { Article } from "../types/article";
 
-export const Header = () => {
+interface HeaderProps {
+  setArticles: Dispatch<SetStateAction<Article[]>>;
+}
 
+export const Header = ({ setArticles }: HeaderProps) => {
   const [searchWord, setSearchWord] = useState("");
 
   const handleSearch = async () => {
-    console.log(searchWord);
     try {
       const response = await fetch(`http://localhost:5000/search?word=${searchWord}`, {
         credentials: 'same-origin',
       });
       const data = await response.json();
-      console.log(data);
+      // 서버에서 받은 데이터 구조에 맞게 변환
+      if (Array.isArray(data.results)) {
+        // 서버 DTO에 맞게 변환 (id, title, summary, imageUrl, publishedAt)
+        const articles = data.results.map((item: any, idx: number) => ({
+          id: idx + 1,
+          title: item.title,
+          summary: item.subtitle,
+          imageUrl: item.image,
+          publishedAt: new Date().toISOString().slice(0, 10),
+        }));
+        setArticles(articles);
+      }
     } catch (error) {
       console.error("전송 에러 : ", error);
     }

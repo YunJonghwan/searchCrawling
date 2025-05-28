@@ -42,7 +42,7 @@ def searchingWord(word):
 
   # DTO 객체로 묶어서 반환
   news_list = []
-  for title, subtitle, img_link, url in zip(title_list, subTitle_list, img_links, url):
+  for title, subtitle, img_link, url in zip(title_list, subTitle_list, img_links, url_links):
       news_list.append(NewsDTO(title=title, subtitle=subtitle, image=img_link, url=url))
 
   driver.quit()

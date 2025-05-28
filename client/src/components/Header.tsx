@@ -26,6 +26,7 @@ export const Header = ({ setArticles, setLoading }: HeaderProps) => {
           title: item.title,
           summary: item.subtitle,
           imageUrl: item.image,
+          url : item.url,
           publishedAt: new Date().toISOString().slice(0, 10),
         }));
         setArticles(articles);

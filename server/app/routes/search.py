@@ -9,5 +9,4 @@ search_bp = Blueprint('search', __name__)
 def search_items():
     word = request.args.get('word')
     articles = searchingWord(word)
-    print(articles)
     return jsonify({"results": articles})

@@ -36,7 +36,7 @@ def searchingWord(word):
           href = ""
       img_links.append(src)
       url_links.append(href)
-  print(url_links)
+
   title_list = [title.text for title in titles]
   subTitle_list = [sub.text for sub in subTitles]
 

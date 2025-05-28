@@ -19,24 +19,31 @@ def searchingWord(word):
   titles = driver.find_elements(By.CLASS_NAME, "sds-comps-text-type-headline1")
   subTitles = driver.find_elements(By.CLASS_NAME, "sds-comps-text-type-body1")
   img_items = driver.find_elements(By.CLASS_NAME, "sds-rego-thumb-overlay")
+  urls = driver.find_elements(By.CLASS_NAME, "_wQLg_3VK6OUyNYiF7VY")
 
   # 각 div 안의 a 태그의 href 추출
   img_links = []
-  for div in img_items:
+  url_links = []
+  for img_div, url_div in zip(img_items, urls):
       try:
-          img_tag = div.find_element(By.TAG_NAME, "img")
+          img_tag = img_div.find_element(By.TAG_NAME, "img")
+          a_tag = url_div.find_element(By.TAG_NAME, "a");
+          
           src = img_tag.get_attribute("src")
+          href = a_tag.get_attribute('href');
       except Exception:
           src = ""
+          href = ""
       img_links.append(src)
-
+      url_links.append(href)
+  print(url_links)
   title_list = [title.text for title in titles]
   subTitle_list = [sub.text for sub in subTitles]
 
   # DTO 객체로 묶어서 반환
   news_list = []
-  for title, subtitle, img_link in zip(title_list, subTitle_list, img_links):
-      news_list.append(NewsDTO(title=title, subtitle=subtitle, image=img_link))
+  for title, subtitle, img_link, url in zip(title_list, subTitle_list, img_links, url):
+      news_list.append(NewsDTO(title=title, subtitle=subtitle, image=img_link, url=url))
 
   driver.quit()
 

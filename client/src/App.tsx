@@ -7,12 +7,13 @@ import { Header } from './components/Header';
 
 function App() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(false);
 
   return (
     <BrowserRouter>
-      <Header setArticles={setArticles} />
+      <Header setArticles={setArticles} setLoading={setLoading} />
       <Routes>
-        <Route path="/" element={<Home articles={articles} />} />
+        <Route path="/" element={<Home articles={articles} loading={loading} />} />
         <Route path="/Result" element={<Result />} />
       </Routes>
     </BrowserRouter>

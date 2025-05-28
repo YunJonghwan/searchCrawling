@@ -5,12 +5,14 @@ import type { Article } from "../types/article";
 
 interface HeaderProps {
   setArticles: Dispatch<SetStateAction<Article[]>>;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Header = ({ setArticles }: HeaderProps) => {
+export const Header = ({ setArticles, setLoading }: HeaderProps) => {
   const [searchWord, setSearchWord] = useState("");
 
   const handleSearch = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`http://localhost:5000/search?word=${searchWord}`, {
         credentials: 'same-origin',
@@ -30,6 +32,8 @@ export const Header = ({ setArticles }: HeaderProps) => {
       }
     } catch (error) {
       console.error("전송 에러 : ", error);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -4,4 +4,5 @@ export interface Article {
   summary: string;
   imageUrl: string;
   publishedAt: string;
+  url: string;
 }

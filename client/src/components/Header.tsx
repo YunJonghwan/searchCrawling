@@ -1,5 +1,6 @@
 import Input from "../components/Input";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Dispatch, SetStateAction } from "react";
 import type { Article } from "../types/article";
 
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 export const Header = ({ setArticles, setLoading }: HeaderProps) => {
   const [searchWord, setSearchWord] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     setLoading(true);
@@ -26,7 +28,7 @@ export const Header = ({ setArticles, setLoading }: HeaderProps) => {
           title: item.title,
           summary: item.subtitle,
           imageUrl: item.image,
-          url : item.url,
+          url: item.url,
           publishedAt: new Date().toISOString().slice(0, 10),
         }));
         setArticles(articles);
@@ -39,16 +41,30 @@ export const Header = ({ setArticles, setLoading }: HeaderProps) => {
   };
 
   return (
-    <header className="w-full p-4 bg-white shadow-md flex justify-between items-center">
+    <header className="w-full flex-col p-4 bg-white shadow-md flex justify-between items-center">
       <div className="w-full flex justify-center">
-        <Input type="text" placeholder="검색어를 입력하세요" 
-          className="border border-gray-300 rounded-md px-4 py-2 w-56" 
+        <Input type="text" placeholder="검색어를 입력하세요"
+          className="border border-gray-300 rounded-md px-4 py-2 w-56"
           name="word"
           onChange={(e) => {
             setSearchWord(e.target.value);
           }}
         />
         <button type="button" className="bg-[#5ea2f7] text-white px-4 py-2 rounded-lg hover:bg-[#7bb7ff]" onClick={handleSearch}>검색</button>
+      </div>
+      <div className="flex gap-2 mt-2">
+        <button
+          className="px-4 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold"
+          onClick={() => navigate("/")}
+        >
+          기사
+        </button>
+        <button
+          className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 font-semibold"
+          onClick={() => navigate("/result")}
+        >
+          통계
+        </button>
       </div>
     </header>
   );

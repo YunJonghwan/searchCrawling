@@ -7,8 +7,6 @@ def scrapArticle(searching_url):
   try:
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(options=options)
     driver.get(searching_url)
     
@@ -16,12 +14,14 @@ def scrapArticle(searching_url):
       EC.presence_of_all_elements_located((By.ID, "dic_area"))
     )
 
-    article_list = driver.find_elements(By.ID, "dic_area")
+    article = driver.find_element(By.ID, "dic_area")
 
-    text_list = []
-    for article in article_list:
-      text_list = article.text
-    return text_list
+    if not article:
+      text = ""
+    else:
+      text = article.text
+
+    return text
   except Exception as e:
     print("크롤링 에러:", e)
   finally:

@@ -3,12 +3,16 @@ import type { Article } from '../types/article';
 import { ArticleCard } from '../components/ArticleCard';
 import { Layout } from '../components/Layout';
 
+interface HomeProps {
+  articles: Article[];
+  loading: boolean;
+  setArticles: React.Dispatch<React.SetStateAction<Article[]>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export default function Home() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(false);
-
+export default function Home({ articles, loading, setArticles, setLoading }: HomeProps) {
   useEffect(() => {
+    if (articles.length > 0) return; // 이미 데이터가 있으면 fetch하지 않음
     const fetchNews = async () => {
       setLoading(true);
       try {
@@ -32,7 +36,7 @@ export default function Home() {
       }
     };
     fetchNews();
-  }, []);
+  }, [articles, setArticles, setLoading]);
 
   return (
     <Layout>

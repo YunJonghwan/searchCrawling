@@ -14,7 +14,7 @@ function App() {
     <BrowserRouter>
       <Header setArticles={setArticles} setLoading={setLoading} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home articles={articles} loading={loading} setArticles={setArticles} setLoading={setLoading}/>}/>
         <Route path="/Result" element={<Result />} />
         <Route path="/Search" element={<Search articles={articles} loading={loading} />} />
       </Routes>

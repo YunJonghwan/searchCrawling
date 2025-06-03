@@ -27,4 +27,4 @@ def article_content():
         text = scrapArticle(article.url)
         content.append(text)
     count = korean_article_analysis(content)
-    return jsonify({"content": content, "count": count})
+    return jsonify({"count": count})

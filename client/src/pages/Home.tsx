@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import type { Article } from '../types/article';
 import { ArticleCard } from '../components/ArticleCard';
 import { Layout } from '../components/Layout';
@@ -36,7 +36,7 @@ export default function Home({ articles, loading, setArticles, setLoading }: Hom
       }
     };
     fetchNews();
-  }, [articles, setArticles, setLoading]);
+  }, []); // 빈 배열로 변경하여 최초 마운트 시에만 실행
 
   return (
     <Layout>

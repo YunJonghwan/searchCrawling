@@ -7,7 +7,7 @@ interface HomeProps {
   loading: boolean;
 }
 
-export default function Search({ articles, loading }: HomeProps) {
+export default function Home({ articles, loading }: HomeProps) {
   return (
     <Layout>
       <div className="mt-10 max-w-2xl mx-auto">

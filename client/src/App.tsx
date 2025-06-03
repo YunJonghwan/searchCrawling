@@ -7,16 +7,18 @@ import { Header } from './components/Header';
 import Search from './pages/Search';
 
 function App() {
-  const [articles, setArticles] = useState<Article[]>([]);
+  // 뉴스탭 데이터와 검색탭 데이터 분리
+  const [newsArticles, setNewsArticles] = useState<Article[]>([]);
+  const [searchArticles, setSearchArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
 
   return (
     <BrowserRouter>
-      <Header setArticles={setArticles} setLoading={setLoading} />
+      <Header setArticles={setSearchArticles} setLoading={setLoading} />
       <Routes>
-        <Route path="/" element={<Home articles={articles} loading={loading} setArticles={setArticles} setLoading={setLoading}/>}/>
+        <Route path="/" element={<Home articles={newsArticles} loading={loading} setArticles={setNewsArticles} setLoading={setLoading}/>} />
         <Route path="/Result" element={<Result />} />
-        <Route path="/Search" element={<Search articles={articles} loading={loading} />} />
+        <Route path="/Search" element={<Search articles={searchArticles} loading={loading} />} />
       </Routes>
     </BrowserRouter>
   )

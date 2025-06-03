@@ -21,9 +21,7 @@ export const Header = ({ setArticles, setLoading }: HeaderProps) => {
         credentials: 'same-origin',
       });
       const data = await response.json();
-      // 서버에서 받은 데이터 구조에 맞게 변환
       if (Array.isArray(data.results)) {
-        // 서버 DTO에 맞게 변환 (id, title, summary, imageUrl, publishedAt)
         const articles = data.results.map((item: any, idx: number) => ({
           id: idx + 1,
           title: item.title,
@@ -33,13 +31,22 @@ export const Header = ({ setArticles, setLoading }: HeaderProps) => {
           publishedAt: new Date().toISOString().slice(0, 10),
         }));
         setArticles(articles);
+      } else {
+        setArticles([]);
       }
       navigate("/search");
     } catch (error) {
+      setArticles([]);
       console.error("전송 에러 : ", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  // 검색어 입력 시 기존 검색 데이터 초기화
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWord(e.target.value);
+    setArticles([]);
   };
 
   return (
@@ -48,9 +55,7 @@ export const Header = ({ setArticles, setLoading }: HeaderProps) => {
         <Input type="text" placeholder="검색어를 입력하세요"
           className="border border-gray-300 rounded-md px-4 py-2 w-56"
           name="word"
-          onChange={(e) => {
-            setSearchWord(e.target.value);
-          }}
+          onChange={handleInputChange}
         />
         <button type="button" className="bg-[#5ea2f7] text-white px-4 py-2 rounded-lg hover:bg-[#7bb7ff]" onClick={handleSearch}>검색</button>
       </div>

@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Result from './pages/results'
 import type { Article } from './types/article';
 import { Header } from './components/Header';
+import Search from './pages/Search';
 
 function App() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -13,8 +14,9 @@ function App() {
     <BrowserRouter>
       <Header setArticles={setArticles} setLoading={setLoading} />
       <Routes>
-        <Route path="/" element={<Home articles={articles} loading={loading} />} />
+        <Route path="/" element={<Home />} />
         <Route path="/Result" element={<Result />} />
+        <Route path="/Search" element={<Search articles={articles} loading={loading} />} />
       </Routes>
     </BrowserRouter>
   )

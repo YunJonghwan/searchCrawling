@@ -1,6 +1,6 @@
 import Input from "../components/Input";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import type { Dispatch, SetStateAction } from "react";
 import type { Article } from "../types/article";
 
@@ -12,6 +12,7 @@ interface HeaderProps {
 export const Header = ({ setArticles, setLoading }: HeaderProps) => {
   const [searchWord, setSearchWord] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearch = async () => {
     setLoading(true);
@@ -33,6 +34,7 @@ export const Header = ({ setArticles, setLoading }: HeaderProps) => {
         }));
         setArticles(articles);
       }
+      navigate("/search");
     } catch (error) {
       console.error("전송 에러 : ", error);
     } finally {
@@ -52,24 +54,24 @@ export const Header = ({ setArticles, setLoading }: HeaderProps) => {
         />
         <button type="button" className="bg-[#5ea2f7] text-white px-4 py-2 rounded-lg hover:bg-[#7bb7ff]" onClick={handleSearch}>검색</button>
       </div>
-      <div className="flex gap-2 mt-2">
+      <div className="w-full flex justify-between gap-4 mt-4 max-w-xl mx-auto">
         <button
-          className={`px-4 py-2 rounded-lg font-semibold ${location.pathname === "/"
-              ? "bg-blue-100 text-blue-700"
-              : "bg-gray-100 text-gray-700"
-            }`}
+          className={`flex-1 px-4 py-2 rounded-lg font-semibold ${location.pathname === "/" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
           onClick={() => navigate("/")}
         >
-          기사
+          뉴스
         </button>
         <button
-          className={`px-4 py-2 rounded-lg font-semibold ${location.pathname === "/result"
-              ? "bg-blue-100 text-blue-700"
-              : "bg-gray-100 text-gray-700"
-            }`}
+          className={`flex-1 px-4 py-2 rounded-lg font-semibold ${location.pathname === "/result" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
           onClick={() => navigate("/result")}
         >
           통계
+        </button>
+        <button
+          className={`flex-1 px-4 py-2 rounded-lg font-semibold ${location.pathname === "/search" ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700"}`}
+          onClick={() => navigate("/search")}
+        >
+          검색
         </button>
       </div>
     </header>

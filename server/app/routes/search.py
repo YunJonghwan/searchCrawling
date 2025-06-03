@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from services.searchingWord import searchingWord
 from services.crawlingNews import crawlingNews
+from services.scrapArticle import scrapArticle
 
 # Blueprint 객체 생성 (이름, 모듈명)
 search_bp = Blueprint('search', __name__)
@@ -16,3 +17,9 @@ def search_items():
 def news_items():
     news = crawlingNews()
     return jsonify({"results": news})
+
+@search_bp.route('/article')
+def article_content():
+    url = request.args.get('url')
+    content = scrapArticle(url)
+    return jsonify({"content": content})

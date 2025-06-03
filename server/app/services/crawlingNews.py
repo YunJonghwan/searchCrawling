@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 from schemas.news import NewsDTO
 import time
 
@@ -21,7 +20,7 @@ def crawlingNews():
 
     news_list = []
     length = min(len(a_tag_list), len(title_list), len(summary_list))
-    for i in range(length):
+    for i in range(10):
       a_tag = a_tag_list[i]
       title_elem = title_list[i]
       summary_elem = summary_list[i]

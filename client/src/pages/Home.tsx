@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { Article } from '../types/article';
 import { ArticleCard } from '../components/ArticleCard';
 import { Layout } from '../components/Layout';
@@ -11,8 +11,12 @@ interface HomeProps {
 }
 
 export default function Home({ articles, loading, setArticles, setLoading }: HomeProps) {
+  const didFetch = useRef(false);
+
   useEffect(() => {
-    if (articles.length > 0) return; // 이미 데이터가 있으면 fetch하지 않음
+    if (didFetch.current || articles.length > 0) return;
+    didFetch.current = true;
+    
     const fetchNews = async () => {
       setLoading(true);
       try {

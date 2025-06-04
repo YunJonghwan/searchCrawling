@@ -22,6 +22,7 @@ def news_items():
 @search_bp.route('/article')
 def article_content():
     news = crawlingNews()
+    print("Fetching articles...")
     content = []
     for article in news:
         text = scrapArticle(article.url)

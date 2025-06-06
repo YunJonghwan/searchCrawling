@@ -16,7 +16,8 @@ def background_article_crawling(news):
     global last_article_analysis, article_crawling_in_progress
     article_crawling_in_progress = True
     content = []
-    for article in news:
+    for idx, article in enumerate(news, 1):
+        print(f"[크롤링 진행] : {idx}")
         text = scrapArticle(article.url)
         content.append(text)
     last_article_analysis = korean_article_analysis(content)

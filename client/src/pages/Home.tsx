@@ -2,6 +2,7 @@ import { Layout } from '../components/Layout';
 import { useEffect, useRef, useState } from 'react';
 import type { Article } from '../types/article';
 import { ArticleCard } from '../components/ArticleCard';
+import ProgressBar from '../components/ProgressBar';
 
 interface HomeProps {
   articles: Article[];
@@ -54,9 +55,7 @@ export default function Home({ articles, loading, setArticles, setLoading }: Hom
       <div className="mt-10 max-w-2xl mx-auto">
         {loading ? (
           <div className="text-center mt-20 text-gray-600 animate-pulse">
-            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-6">
-              <div className={`h-full bg-blue-500 transition-all duration-300`} id="progress-bar"></div>
-            </div>
+            <ProgressBar progress={progress} />
             <p className="text-2xl font-medium">정보를 가져오는 중입니다...</p>
           </div>
         ) : (
@@ -67,11 +66,6 @@ export default function Home({ articles, loading, setArticles, setLoading }: Hom
           </div>
         )}
       </div>
-      <style>{`
-        #progress-bar {
-          width: ${progress}%;
-        }
-      `}</style>
     </Layout>
   );
 }

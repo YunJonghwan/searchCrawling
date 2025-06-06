@@ -1,34 +1,45 @@
 import { Layout } from '../components/Layout';
-import { ArticleCard } from '../components/ArticleCard';
-import type { Article } from '../types/article';
-
-const dummyArticles: Article[] = [
-  {
-    id: 1,
-    title: '예시 기사 제목 1',
-    summary: '이것은 요약 텍스트입니다. 간략한 설명을 보여줍니다.',
-    imageUrl: 'https://via.placeholder.com/150',
-    publishedAt: '2025-05-18',
-    url:"임시시"
-  },
-  {
-    id: 2,
-    title: '예시 기사 제목 2',
-    summary: '다른 기사 내용 요약이 여기에 표시됩니다.',
-    imageUrl: 'https://via.placeholder.com/150',
-    publishedAt: '2025-05-17',
-    url:"임시"
-  },
-];
+import { useEffect, useState } from 'react';
 
 export default function Results() {
+  const [words, setWords] = useState<{ word: string; count: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/article')
+      .then((res) => res.json())
+      .then((data) => {
+        const countObj = data.count;
+        const arr = Object.entries(countObj).map(([word, count]) => ({ word, count: Number(count) }));
+        arr.sort((a, b) => b.count - a.count);
+        setWords(arr);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <Layout>
-      <div className="grid gap-4">
-        {dummyArticles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
-        ))}
-      </div>
+      {loading ? (
+        <div className="text-center mt-20 text-gray-600 animate-pulse">
+          <p className="text-2xl font-medium">정보를 가져오는 중입니다...</p>
+        </div>
+      ) : (
+        <div className="w-full max-w-2xl mx-auto">
+          <div className="flex font-bold">
+            <div className="flex-1 px-4 py-2">단어</div>
+            <div className="w-32 px-4 py-2">빈도수</div>
+          </div>
+          {words.map(({ word, count }) => (
+            <div key={word} className="flex border">
+              <div className="flex-1 px-4 py-2 border-r">{word}</div>
+              <div className="w-32 px-4 py-2">{count}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </Layout>
   );
 }

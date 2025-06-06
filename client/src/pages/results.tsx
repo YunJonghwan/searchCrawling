@@ -1,5 +1,6 @@
 import { Layout } from '../components/Layout';
-import { useEffect, useRef } from 'react';
+import ProgressBar from '../components/ProgressBar';
+import { useEffect, useRef, useState } from 'react';
 
 interface Word {
   word: string;
@@ -15,6 +16,7 @@ interface ResultsProps {
 
 export default function Results({ words, loading, setWords, setLoading }: ResultsProps) {
   const didFetch = useRef(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (didFetch.current || words.length > 0) return;
@@ -22,17 +24,23 @@ export default function Results({ words, loading, setWords, setLoading }: Result
 
     const fetchWords = async () => {
       setLoading(true);
+      setProgress(0);
       try {
+        setProgress(10);
         const response = await fetch('http://localhost:5000/article');
+        setProgress(60);
         const data = await response.json();
+        setProgress(80);
         const countObj = data.count;
         const arr = Object.entries(countObj).map(([word, count]) => ({ word, count: Number(count) }));
         arr.sort((a, b) => b.count - a.count);
         setWords(arr);
+        setProgress(100);
       } catch (e) {
         setWords([]);
+        setProgress(100);
       } finally {
-        setLoading(false);
+        setTimeout(() => setLoading(false), 300);
       }
     };
     fetchWords();
@@ -42,6 +50,7 @@ export default function Results({ words, loading, setWords, setLoading }: Result
     <Layout>
       {loading ? (
         <div className="text-center mt-20 text-gray-600 animate-pulse">
+          <ProgressBar progress={progress} />
           <p className="text-2xl font-medium">정보를 가져오는 중입니다...</p>
         </div>
       ) : (

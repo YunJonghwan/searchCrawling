@@ -17,7 +17,7 @@ def korean_article_analysis(content):
         text = str(content)
 
     # 한글로만 이루어진 명사만 추출
-    nouns = [noun for noun in okt.nouns(text) if noun not in stopwords and re.match(r'^[가-힣]+$', noun)]
+    nouns = [noun for noun in okt.nouns(text) if noun not in stopwords and re.match(r'^[가-힣]+$', noun) and len(noun) > 1]
     word_count = Counter(nouns)
     # 빈도수 기준 내림차순 정렬된 (단어, 카운트) 리스트 반환
     sorted_word_count = sorted(word_count.items(), key=lambda x: x[1], reverse=True)

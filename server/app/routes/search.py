@@ -34,8 +34,7 @@ def news_items():
     global last_news, last_article_analysis, article_crawling_in_progress
     news = crawlingNews()
     last_news = news
-    last_article_analysis = None  # 새 뉴스가 들어오면 이전 기사 분석 결과 초기화
-    # 기사 크롤링 및 분석을 백그라운드에서 시작
+    last_article_analysis = None
     Thread(target=background_article_crawling, args=(news,)).start()
     return jsonify({"results": news})
 

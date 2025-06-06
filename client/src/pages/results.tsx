@@ -56,11 +56,13 @@ export default function Results({ words, loading, setWords, setLoading }: Result
       ) : (
         <div className="w-full max-w-2xl mx-auto">
           <div className="flex font-bold">
+            <div className="w-16 px-4 py-2">순위</div>
             <div className="flex-1 px-4 py-2">단어</div>
             <div className="w-32 px-4 py-2">빈도수</div>
           </div>
-          {words.map(({ word, count }) => (
+          {words.map(({ word, count }, idx) => (
             <div key={word} className="flex border">
+              <div className="w-16 px-4 py-2 border-r text-center">{idx + 1}</div>
               <div className="flex-1 px-4 py-2 border-r">{word}</div>
               <div className="w-32 px-4 py-2">{count}</div>
             </div>

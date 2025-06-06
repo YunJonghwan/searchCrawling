@@ -1,30 +1,41 @@
 import { Layout } from '../components/Layout';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-export default function Results() {
-  const [words, setWords] = useState<{ word: string; count: number }[]>([]);
-  const [loading, setLoading] = useState(true);
+interface Word {
+  word: string;
+  count: number;
+}
+
+interface ResultsProps {
+  words: Word[];
+  loading: boolean;
+  setWords: React.Dispatch<React.SetStateAction<Word[]>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function Results({ words, loading, setWords, setLoading }: ResultsProps) {
+  const didFetch = useRef(false);
 
   useEffect(() => {
-    const cached = localStorage.getItem('articleWords');
-    if (cached) {
-      setWords(JSON.parse(cached));
-      setLoading(false);
-      return;
-    }
-    fetch('http://localhost:5000/article')
-      .then((res) => res.json())
-      .then((data) => {
+    if (didFetch.current || words.length > 0) return;
+    didFetch.current = true;
+
+    const fetchWords = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:5000/article');
+        const data = await response.json();
         const countObj = data.count;
         const arr = Object.entries(countObj).map(([word, count]) => ({ word, count: Number(count) }));
         arr.sort((a, b) => b.count - a.count);
         setWords(arr);
-        localStorage.setItem('articleWords', JSON.stringify(arr));
+      } catch (e) {
+        setWords([]);
+      } finally {
         setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+      }
+    };
+    fetchWords();
   }, []);
 
   return (

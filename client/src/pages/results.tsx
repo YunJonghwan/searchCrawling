@@ -14,9 +14,9 @@ interface ResultsProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Results({ words, loading, setWords, setLoading }: ResultsProps) {
+export default function Results({ words, setWords, setLoading }: ResultsProps) {
   const didFetch = useRef(false);
-  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState<'done' | 'processing' | 'not_started'>('not_started');
 
   useEffect(() => {
     if (didFetch.current || words.length > 0) return;
@@ -24,21 +24,22 @@ export default function Results({ words, loading, setWords, setLoading }: Result
 
     const fetchWords = async () => {
       setLoading(true);
-      setProgress(0);
       try {
-        setProgress(10);
+        setStatus('processing');
         const response = await fetch('http://localhost:5000/article');
-        setProgress(60);
         const data = await response.json();
-        setProgress(80);
-        const countObj = data.count;
-        const arr = Object.entries(countObj).map(([word, count]) => ({ word, count: Number(count) }));
-        arr.sort((a, b) => b.count - a.count);
-        setWords(arr);
-        setProgress(100);
+        if (data.status === 'done') {
+          const countObj = data.count;
+          const arr = Object.entries(countObj).map(([word, count]) => ({ word, count: Number(count) }));
+          arr.sort((a, b) => b.count - a.count);
+          setWords(arr);
+        } else {
+          setWords([]);
+        }
+        setStatus(data.status || 'not_started');
       } catch (e) {
         setWords([]);
-        setProgress(100);
+        setStatus('not_started');
       } finally {
         setTimeout(() => setLoading(false), 300);
       }
@@ -48,10 +49,18 @@ export default function Results({ words, loading, setWords, setLoading }: Result
 
   return (
     <Layout>
-      {loading ? (
-        <div className="text-center mt-20 text-gray-600 animate-pulse">
-          <ProgressBar progress={progress} />
-          <p className="text-2xl font-medium">정보를 가져오는 중입니다...</p>
+      {status === 'processing' ? (
+        <div className="text-center mt-20 text-blue-500 animate-pulse">
+          <ProgressBar progress={70} />
+          <p className="text-2xl font-medium">기사 분석이 진행 중입니다...</p>
+        </div>
+      ) : status === 'not_started' ? (
+        <div className="text-center mt-20 text-gray-400">
+          <p className="text-2xl font-medium">
+            아직 분석이 시작되지 않았습니다.
+            <br />
+            먼저 뉴스 크롤링을 진행해 주세요.
+          </p>
         </div>
       ) : (
         <div className="w-full max-w-2xl mx-auto">
@@ -60,13 +69,15 @@ export default function Results({ words, loading, setWords, setLoading }: Result
             <div className="flex-1 px-4 py-2">단어</div>
             <div className="w-32 px-4 py-2">빈도수</div>
           </div>
-          {words.map(({ word, count }, idx) => (
-            <div key={word} className="flex border">
-              <div className="w-16 px-4 py-2 border-r text-center">{idx + 1}</div>
-              <div className="flex-1 px-4 py-2 border-r">{word}</div>
-              <div className="w-32 px-4 py-2">{count}</div>
-            </div>
-          ))}
+          <div className="max-h-[400px] overflow-y-auto border rounded-md">
+            {words.map(({ word, count }, idx) => (
+              <div key={word} className="flex border-b last:border-b-0">
+                <div className="w-16 px-4 py-2 border-r text-center">{idx + 1}</div>
+                <div className="flex-1 px-4 py-2 border-r">{word}</div>
+                <div className="w-32 px-4 py-2">{count}</div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </Layout>

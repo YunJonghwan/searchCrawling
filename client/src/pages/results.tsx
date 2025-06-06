@@ -6,6 +6,12 @@ export default function Results() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const cached = localStorage.getItem('articleWords');
+    if (cached) {
+      setWords(JSON.parse(cached));
+      setLoading(false);
+      return;
+    }
     fetch('http://localhost:5000/article')
       .then((res) => res.json())
       .then((data) => {
@@ -13,6 +19,7 @@ export default function Results() {
         const arr = Object.entries(countObj).map(([word, count]) => ({ word, count: Number(count) }));
         arr.sort((a, b) => b.count - a.count);
         setWords(arr);
+        localStorage.setItem('articleWords', JSON.stringify(arr));
         setLoading(false);
       })
       .catch(() => {

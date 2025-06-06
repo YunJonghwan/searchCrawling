@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { Layout } from '../components/Layout';
+import { useEffect, useRef, useState } from 'react';
 import type { Article } from '../types/article';
 import { ArticleCard } from '../components/ArticleCard';
-import { Layout } from '../components/Layout';
 
 interface HomeProps {
   articles: Article[];
@@ -12,16 +12,21 @@ interface HomeProps {
 
 export default function Home({ articles, loading, setArticles, setLoading }: HomeProps) {
   const didFetch = useRef(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (didFetch.current || articles.length > 0) return;
     didFetch.current = true;
-    
+
     const fetchNews = async () => {
       setLoading(true);
+      setProgress(0);
       try {
+        setProgress(10);
         const response = await fetch('http://localhost:5000/news');
+        setProgress(60);
         const data = await response.json();
+        setProgress(80);
         if (Array.isArray(data.results)) {
           const articles = data.results.map((item: any, idx: number) => ({
             id: idx + 1,
@@ -33,20 +38,25 @@ export default function Home({ articles, loading, setArticles, setLoading }: Hom
           }));
           setArticles(articles);
         }
+        setProgress(100);
       } catch (e) {
         setArticles([]);
+        setProgress(100);
       } finally {
-        setLoading(false);
+        setTimeout(() => setLoading(false), 300);
       }
     };
     fetchNews();
-  }, []); // 빈 배열로 변경하여 최초 마운트 시에만 실행
+  }, []);
 
   return (
     <Layout>
       <div className="mt-10 max-w-2xl mx-auto">
         {loading ? (
           <div className="text-center mt-20 text-gray-600 animate-pulse">
+            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-6">
+              <div className={`h-full bg-blue-500 transition-all duration-300`} id="progress-bar"></div>
+            </div>
             <p className="text-2xl font-medium">정보를 가져오는 중입니다...</p>
           </div>
         ) : (
@@ -57,6 +67,11 @@ export default function Home({ articles, loading, setArticles, setLoading }: Hom
           </div>
         )}
       </div>
+      <style>{`
+        #progress-bar {
+          width: ${progress}%;
+        }
+      `}</style>
     </Layout>
   );
 }

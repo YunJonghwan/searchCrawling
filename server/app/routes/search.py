@@ -3,11 +3,24 @@ from services.searchingWord import searchingWord
 from services.crawlingNews import crawlingNews
 from services.scrapArticle import scrapArticle
 from services.korean_article_analysis import korean_article_analysis
+from threading import Thread
 
 # Blueprint 객체 생성 (이름, 모듈명)
 search_bp = Blueprint('search', __name__)
 
 last_news = None
+last_article_analysis = None
+article_crawling_in_progress = False
+
+def background_article_crawling(news):
+    global last_article_analysis, article_crawling_in_progress
+    article_crawling_in_progress = True
+    content = []
+    for article in news:
+        text = scrapArticle(article.url)
+        content.append(text)
+    last_article_analysis = korean_article_analysis(content)
+    article_crawling_in_progress = False
 
 # Blueprint에 라우트 등록
 @search_bp.route('/search')
@@ -18,18 +31,20 @@ def search_items():
 
 @search_bp.route('/news')
 def news_items():
+    global last_news, last_article_analysis, article_crawling_in_progress
     news = crawlingNews()
-    global last_news
     last_news = news
+    last_article_analysis = None  # 새 뉴스가 들어오면 이전 기사 분석 결과 초기화
+    # 기사 크롤링 및 분석을 백그라운드에서 시작
+    Thread(target=background_article_crawling, args=(news,)).start()
     return jsonify({"results": news})
 
 @search_bp.route('/article')
 def article_content():
-    global last_news
-    news = last_news if last_news is not None else crawlingNews()
-    content = []
-    for article in news:
-        text = scrapArticle(article.url)
-        content.append(text)
-    count = korean_article_analysis(content)
-    return jsonify({"count": count})
+    global last_article_analysis, article_crawling_in_progress
+    if last_article_analysis is not None:
+        return jsonify({"count": last_article_analysis, "status": "done"})
+    elif article_crawling_in_progress:
+        return jsonify({"status": "processing"})
+    else:
+        return jsonify({"status": "not_started"})

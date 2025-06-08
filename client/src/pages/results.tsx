@@ -16,7 +16,9 @@ interface ResultsProps {
 
 export default function Results({ words, setWords, setLoading }: ResultsProps) {
   const didFetch = useRef(false);
-  const [status, setStatus] = useState<'done' | 'processing' | 'not_started'>('not_started');
+  const [status, setStatus] = useState<'done' | 'processing' | 'not_started'>(() => {
+    return sessionStorage.getItem('articleStatus') as 'done' | 'processing' | 'not_started' || 'not_started';
+  });
 
   useEffect(() => {
     if (didFetch.current || words.length > 0) return;
@@ -37,9 +39,11 @@ export default function Results({ words, setWords, setLoading }: ResultsProps) {
           setWords([]);
         }
         setStatus(data.status || 'not_started');
+        sessionStorage.setItem('articleStatus', data.status || 'not_started');
       } catch (e) {
         setWords([]);
         setStatus('not_started');
+        sessionStorage.setItem('articleStatus', 'not_started');
       } finally {
         setTimeout(() => setLoading(false), 300);
       }
